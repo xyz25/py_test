@@ -1,9 +1,52 @@
 # py_test
 
+***
+
+
+
 ## 安装 
+
 `pip install pytest`
 
-## `pytest.ini` 配置文件
+***
+
+
+
+## 在第n个错误后停止测试
+
+```python
+pytest -x  # 在第一个错误后停止测试
+pytest --maxfail=2 # 在第二个错误处停止 （=左右不能有空格）
+```
+
+***
+
+
+
+## 指定测试、选择测试
+
+```python
+pytest test_a.py 	# 指定测试当前目录下的test_a.py 文件
+pytest ./tests # 测试tests目录下的文件
+
+# 按照节点测试
+pytest test_1.py::test_answer # 测试test_1.py中的test_answer（可以是函数，类等）
+pytest test_class.py::TestClass::test_two # 测试test_class.py中的Testclass中的test_two方法
+        
+# 按照标记测试
+
+```
+
+
+
+***
+
+
+
+## pytest配置文件
+
+`pytest.ini`
+
 ```python
 # pytest的配置文件  一般放在测试目录下
 
