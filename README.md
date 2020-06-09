@@ -43,6 +43,116 @@ pytest test_class.py::TestClass::test_two # 测试test_class.py中的Testclass�
 
 
 
+## Pytest的setup和teardown函数
+
+### 函数级别setup()/teardown()
+
+<small>运行于测试方法的始末，即运行一次测试函数就会运行一次setup函数和teardown函数</small>
+
+```python
+import pytest
+
+
+class TestClass:
+    def setup(self):    # 作用域在当前类中
+        print("setup func in class ")
+
+    def test_a(self):
+        print("test  test_a")
+        assert 0
+
+    def test_b(self):
+        print("test test_b")
+        assert 0
+
+    def teardown(self):     # 作用域在当前类中
+        print("teardown  func in class")
+
+
+def setup():
+    print("setup outside")
+
+
+def test_c():
+    print("test test_c")
+    assert 0
+
+
+def test_d():
+    print("test test_d")
+    assert 0
+
+
+def teardown():
+    print("teardown outside")
+
+
+if __name__ == '__main__':
+    pytest.main(["-s", "test_setup_teardown_fun.py"])
+
+"""
+test_setup_teardown_fun.py 
+setup func in class 
+test  test_a
+Fteardown  func in class
+setup func in class 
+test test_b
+Fteardown  func in class
+setup outside
+test test_c
+Fteardown outside
+setup outside
+test test_d
+Fteardown outside
+"""
+```
+
+
+
+### 类级别setup_class() / teardown_class()
+
+<small>类级别的setup_class和teardown_class只会在测试类的时候前后运行一次，不在乎其中的测试函数的运行</small>
+
+```python
+import pytest
+
+
+class TestClass:
+    def setup_class(self):    # 作用域在当前类中
+        print("setup_class  ")
+
+    def test_a(self):
+        print("test  test_a")
+        assert 0
+
+    def test_b(self):
+        print("test test_b")
+        assert 0
+
+    def teardown_class(self):     # 作用域在当前类中
+        print("teardown_class")
+
+
+if __name__ == '__main__':
+    pytest.main(["-s", "test_setup_teardown_class.py"])
+    
+    
+"""
+test_setup_teardown_class.py 
+setup_class  
+test  test_a
+Ftest test_b
+Fteardown_class
+"""
+
+```
+
+
+
+***
+
+
+
 ## pytest配置文件
 
 `pytest.ini`
@@ -77,4 +187,6 @@ python_functions = test_*
 ***
 
 ## pytest之fixture的使用
+
+
 

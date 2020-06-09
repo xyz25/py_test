@@ -11,3 +11,5 @@ def func():
 def func2():
     print(' test func2')
     assert 0
+    
+    
