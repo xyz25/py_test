@@ -26,5 +26,10 @@ def test_b():
     assert 0
 
 
+@pytest.fixture(autouse=True)   # autouse的函数会优先于测试类的运行
+def before3():
+    print("before3 autouse")
+
+
 if __name__ == '__main__':
     pytest.main(["-s",  "pytest_fixture.py"])  # main([指令])

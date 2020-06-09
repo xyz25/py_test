@@ -180,13 +180,119 @@ python_functions = test_*
 ```
 
 ***
+
+
 ## pytest测试报告
+
 `pip install pytest-html` <br>
 使用方法：`pytest --html=./report.html` 或者`addopts = -s --html=./report.html`<br>
 结果：执行`pytest`之后会在. 目录下生成report.html 和asserts文件夹（style.css）
 ***
 
+
+
 ## pytest之fixture的使用
 
+`fixture`修饰器来标记固定的工厂函数,在其他函数，模块，类或整个工程调用它时会被激活并优先执行,通常会被用于完成预置处理和重复操作。
 
+### `fixture`通过参数引用
+
+```python
+import pytest
+
+
+class TestABC:
+    @pytest.fixture  # 使用pytest.fixture装饰
+    def before(self) -> None:
+        print('before----')
+        
+        
+		# 通过参数引用 传入被pytest.fixture装饰的函数before 在当前函数被测试之前，执行before函数
+    def test_a(self, before):  
+      
+        print("test test_a func ")
+        assert 0  # 断言
+
+        
+"""
+pytest_fixture.py 
+before----
+test test_a func 
+"""
+```
+
+
+
+### `fixture`通过函数引用
+
+```python
+@pytest.fixture
+def before1():
+    print("before2----")
+
+
+@pytest.mark.usefixtures("before1")  # 使用装饰器为类 、函数、方法添加fixture测试
+def test_b():
+    print("test_b----")
+    assert 0
+    
+"""
+pytest_fixture.py 
+before2----
+test_b----
+"""
+```
+
+
+
+### `fixture`设置自动运行
+
+```python
+"""
+pytest.fixture装饰器来标记固定的函数和方法或者类
+被装饰的函数可在其他函数、类、模块，甚至整个项目调用之前，被执行，一般用于完成预置处理和重复操作
+"""
+import pytest
+
+
+class TestABC:
+    @pytest.fixture  # 使用pytest.fixture装饰
+    def before(self) -> None:
+        print('before----')
+
+    def test_a(self, before):  # 传入被pytest.fixture装饰的函数before 在当前函数被测试之前，执行before函数
+        print("test test_a func ")
+        assert 0  # 断言
+
+
+@pytest.fixture
+def before1():
+    print("before2----")
+
+
+@pytest.mark.usefixtures("before1")  # 使用装饰器为类 、函数、方法添加fixture测试
+def test_b():
+    print("test_b----")
+    assert 0
+
+
+@pytest.fixture(autouse=True)   # autouse的函数会优先于测试类的运行
+def before3():
+    print("before3 autouse")
+
+
+if __name__ == '__main__':
+    pytest.main(["-s",  "pytest_fixture.py"])  # main([指令])
+    
+    
+"""
+pytest_fixture.py 
+before3 autouse
+before----
+test test_a func 
+Fbefore3 autouse
+before2----
+test_b----
+"""
+```
 
